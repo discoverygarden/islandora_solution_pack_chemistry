@@ -5,6 +5,27 @@
  * Hooks and callbacks for this module.
  */
 
+// Hooks.
+define('ISLANDORA_CLI_IMG_ARGS_ALTER', 'islandora_chemistry_img_args_alter');
+
+/**
+ * Implements hook_menu().
+ */
+function islandora_chemistry_menu() {
+  return array(
+    'admin/islandora/solution_pack_config/chemistry' => array(
+      'title' => 'Chemistry Solution Pack',
+      'description' => 'Configure Islandora Chemistry solution pack.',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('islandora_chemistry_admin_settings_form'),
+      'access arguments' => array('administer site configuration'),
+      'file' => 'includes/admin.form.inc',
+      'type' => MENU_NORMAL_ITEM,
+    ),
+  );
+}
+
+
 /**
  * Implements hook_theme().
  */
