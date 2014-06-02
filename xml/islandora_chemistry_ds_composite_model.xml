@@ -10,6 +10,19 @@
   <dsTypeModel ID="MODS" optional="true">
     <form MIME="text/xml"></form>
   </dsTypeModel>
+  <dsTypeModel ID="MOL" optional="true">
+    <form MIME="text/xml"></form>
+    <form MIME="text/plain" optional="true"/>
+    <form MIME="chemical/x-mdl-molfile" optional="true"/>
+  </dsTypeModel>
+  <dsTypeModel ID="CML" optional="true">
+    <form MIME="text/xml"></form>
+    <form MIME="text/plain" optional="true"/>
+    <form MIME="chemical/x-cml" optional="true"/>
+  </dsTypeModel>
+  <dsTypeModel ID="MEDIUM_SIZE" ORDERED="false" optional="true">
+    <form MIME="image/jpg"></form>
+  </dsTypeModel>
   <dsTypeModel ID="OBJ" optional="false">
     <form MIME="text/xml" optional="true"/>
     <form MIME="text/plain" optional="true"/>

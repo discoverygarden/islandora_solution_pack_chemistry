@@ -95,4 +95,51 @@ function islandora_chemistry_upload_form_submit(array $form, array &$form_state)
       $tn->mimetype = $tn_file->filemime;
     }
   }
+  islandora_chemistry_simple_ingest($object, $chem_path, $ds->mimetype);
+}
+
+function islandora_chemistry_simple_ingest($fedora_object, $file_name, $mime, $separate = TRUE) {
+  module_load_include('inc', 'islandora_chemistry', 'includes/islandora_chemistry');
+  module_load_include('inc', 'islandora', 'includes/mime_detect');
+
+  $file_name_array = array();
+
+  $mol = IslandoraOBabel::chem2mol('MOL', $file_name, 'mol');
+  if ($mol != 1) {
+    drupal_set_message(t("Creating an archival version of $file_name failed!"), 'error');
+    return;
+  }
+  $file_name_array['MOL'] = $_SESSION['fedora_ingest_files']['MOL'];
+  $cml = IslandoraOBabel::chem2cml('CML', $file_name, 'xml', $separate);
+  if ($cml != 1) {
+    drupal_set_message(t("Extracting metadata from $file_name failed!"), 'error');
+    return;
+  }
+  $file_name_array['CML'] = $_SESSION['fedora_ingest_files']['CML'];
+
+  $jpg = IslandoraOBabel::chem2jpg(array('width' => '100', 'height' => '100'), 'TN', $file_name, 'jpg', $fedora_object);
+  if ($jpg != 1) {
+    drupal_set_message(t("Creating the thumbnail for $file_name failed!"), 'error');
+    return;
+  }
+  $file_name_array['TN'] = $_SESSION['fedora_ingest_files']['TN'];
+  $medium = IslandoraOBabel::chem2jpg(array('width' => '250', 'height' => '250'), 'MEDIUM', $file_name, 'jpg', $fedora_object);
+  if ($medium != 1) {
+    drupal_set_message(t("Creating an image of $file_name failed!"), 'error');
+    return;
+  }
+
+  $file_name_array['MEDIUM'] = $_SESSION['fedora_ingest_files']['MEDIUM'];
+  $mime_detect = new MimeDetect();
+  // Build datastreams.
+  foreach ($file_name_array as $key => $value) {
+    $ds = $fedora_object->constructDatastream($key, 'M');
+    $path = drupal_realpath($value);
+    $str = $mime_detect->getMimetype($value);
+
+    $ds->label = "$key file.";
+    $ds->mimetype = $str;
+    $ds->setContentFromFile($path, FALSE);
+    $fedora_object->ingestDatastream($ds);
+  }
 }

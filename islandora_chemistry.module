@@ -5,6 +5,10 @@
  * Hooks and callbacks for this module.
  */
 
+// Hooks.
+define('ISLANDORA_CLI_IMG_ARGS_ALTER', 'islandora_chemistry_img_args_alter');
+
+
 /**
  * Implements hook_theme().
  */
