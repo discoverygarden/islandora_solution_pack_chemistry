@@ -33,3 +33,23 @@ function islandora_chemistry_set_inchikey($arr_val) {
   ->execute();
   return $data;
 }
+
+/**
+ * Run fingerprint generation.
+ *
+ * @param string $filepath
+ *   The path to the output temp file.
+ *
+ * @return number
+ *   Return value of the executable.
+ */
+function islandora_chemistry_run_fingerprint_exec($filepath) {
+  $path = drupal_realpath(drupal_get_path('module', 'islandora_chemistry'). '/includes/fingerprint.py');
+  $python = variable_get('islandora_chemistry_python', '/usr/bin/python2.7');
+  $cmd = "$python $path $filepath";
+  $return = 1;
+  // This calls a python script to generate the molecular fingerprint
+  $fingerprint = array();
+  exec($cmd, $fingerprint, $return);
+  return $return;
+}
