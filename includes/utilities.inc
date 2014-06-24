@@ -118,6 +118,15 @@ function islandora_chemistry_get_title(AbstractObject $object) {
   $cml->registerXPathNamespace('cml', 'http://www.xml-cml.org/schema');
   $cml->registerXPathNamespace('mods', 'http://www.loc.gov/mods/v3');
 
+  // Attempt to set it from the formula first.
+  $titles = $cml->xpath('/cml:molecule/cml:metadataList[@convention="islandora:sp_chem_CM"]/mods:mods/mods:note[@type="formula"]');
+  $title_element = reset($titles);
+  if ($title_element) {
+    $raw_title = (string) $title_element;
+    $title = ucfirst(strtolower(ltrim($raw_title)));
+    return $title;
+  }
+
   // Attempt to use IUPAC:trivial name.
   $titles = $cml->xpath('/cml:molecule/cml:metadataList[@convention="islandora:sp_chem_CM"]/mods:mods/mods:titleInfo[@type="uniform"]/mods:title');
   $title_element = reset($titles);

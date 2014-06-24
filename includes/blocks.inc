@@ -138,8 +138,8 @@ function islandora_chemistry_upload_file_form_submit($form, &$form_state) {
     ));
   }
   else {
-    // @TODO: Set label via derivatives?
     $object = $tuque->repository->constructObject($default_namespace);
+    $object->label = $file->filename;
     $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:chemistry_collection');
     $object->models = array($content_model);
     $ds = $object->constructDatastream('OBJ', 'M');
