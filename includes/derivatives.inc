@@ -103,7 +103,8 @@ function islandora_chemistry_derive_jpeg_from_svg(AbstractObject $object, $width
   $svg_file = islandora_chemistry_derive_file_from_openbabel($object, 'OBJ', 'image/svg+xml', array(
     // "png" doesn't work... Guess we'll convert 'em to jpegs...
     'o' => 'svg',
-    'x' => 'd',   // Do not display molecule name (filename) in image.
+    // Do not display molecule name (filename) in image:
+    'x' => 'd',
   ));
   $svg_file = file_move($svg_file, file_create_filename('temp.svg', 'temporary://'));
 
